@@ -1,36 +1,278 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Play · BananaQuest</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/game.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6d142">
+
+  <title>Memory Game · Banana Quest</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/game.css">
 </head>
+
 <body class="game-page">
+
+  <!-- Header -->
   <header class="game-topbar">
-    <a class="brand" href="/"><span class="brand-mark">🍌</span> Banana<span>Quest</span></a>
-    <div class="player-area"><span class="player-avatar" id="playerAvatar">?</span><span id="playerName">Player</span><button id="logoutButton" class="logout-button">Log out ↗</button></div>
+    <a class="brand" href="/">
+      <span class="brand-mark">🍌</span>
+      Banana<span>Quest</span>
+    </a>
+
+    <div class="player-area">
+      <span class="player-avatar" id="playerAvatar">?</span>
+      <span id="playerName">Player</span>
+
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+      >
+        Log out
+      </button>
+    </div>
   </header>
+
+
+  <!-- Main Game -->
   <main class="game-wrap">
-    <div class="game-heading"><div><div class="eyebrow">YOUR PERSONAL BRAIN BREAK</div><h1>Banana Memory <span>Quest.</span></h1><p>Match the fruit pairs, then solve the Banana Challenge.</p></div><div class="level-pill"><span class="level-dot"></span> LEVEL 01 · SOLO</div></div>
-    <section class="game-layout">
-      <div class="board-panel">
-        <div class="board-top"><div><div class="step-label">01 / MEMORY MATCH</div><h2>Find every pair</h2></div><button id="restartButton" class="restart-button">↻ Restart</button></div>
-        <div class="stats-row"><div class="stat"><span>MOVES</span><strong id="moveCount">0</strong></div><div class="stat"><span>PAIRS</span><strong id="pairCount">0 <small>/ 4</small></strong></div><div class="stat"><span>TIME</span><strong id="timer">00:00</strong></div></div>
-        <div id="memoryBoard" class="memory-board" aria-label="Memory matching cards"></div>
-        <p id="gameMessage" class="game-message" role="status">Flip two cards and find their matching fruit.</p>
+
+    <!-- Game Heading -->
+    <section class="game-heading">
+      <div>
+        <h1>Memory Match</h1>
+        <p class="heading-copy">
+          Match fruit pairs and solve the final Banana puzzle to complete each level.
+        </p>
       </div>
-      <aside class="side-panel">
-        <div class="side-card how-card"><div class="side-icon">✦</div><div class="step-label">HOW TO PLAY</div><h3>Two little challenges.</h3><ol><li><span>01</span> Flip two cards to find matching fruit pairs.</li><li><span>02</span> Match all four pairs to unlock the Banana Challenge.</li><li><span>03</span> Solve the puzzle to complete your quest.</li></ol></div>
-        <div class="side-card api-card"><div class="api-icon">↗</div><div class="step-label">POWERED BY AN API</div><h3>Banana Challenge</h3><p>The final puzzle comes from the University of Bedfordshire Banana Game API.</p><div class="api-status"><span class="status-dot"></span> API integration enabled</div></div>
+
+      <div class="progress-summary">
+        <span class="progress-label">Your progress</span>
+
+        <strong>
+          <span id="progressLevel">1</span>
+          <small> / 5 levels</small>
+        </strong>
+      </div>
+    </section>
+
+
+    <!-- Level Selection -->
+    <section class="level-strip" aria-label="Game levels">
+
+      <div class="level-strip-heading">
+        <span>Levels</span>
+        <span id="unlockHint">
+          Complete a level to unlock the next
+        </span>
+      </div>
+
+      <div id="levelButtons" class="level-buttons"></div>
+
+    </section>
+
+
+    <!-- Game Layout -->
+    <section class="game-layout">
+
+      <!-- Memory Board -->
+      <div class="board-panel">
+
+        <div class="board-top">
+
+          <div>
+            <div class="step-label" id="levelEyebrow">
+              LEVEL 01
+            </div>
+
+            <h2 id="levelTitle">
+              A good place to start
+            </h2>
+          </div>
+
+          <button
+            id="restartButton"
+            class="restart-button"
+            type="button"
+            disabled
+          >
+            Restart level
+          </button>
+
+        </div>
+
+
+        <!-- Game Statistics -->
+        <div class="stats-row">
+
+          <div class="stat">
+            <span>Moves</span>
+            <strong id="moveCount">0</strong>
+          </div>
+
+          <div class="stat">
+            <span>Pairs</span>
+            <strong id="pairCount">0 <small>/ 2</small></strong>
+          </div>
+
+          <div class="stat">
+            <span>Time</span>
+            <strong id="timer">00:00</strong>
+          </div>
+
+          <div class="stat">
+            <span>Cards</span>
+            <strong id="cardCount">4</strong>
+          </div>
+
+        </div>
+
+
+        <!-- Memory Cards -->
+        <div
+          id="memoryBoard"
+          class="memory-board"
+          aria-label="Memory matching cards"
+        >
+          <div class="board-placeholder">
+            Your cards will appear here when you're ready.
+          </div>
+        </div>
+
+
+        <!-- Game Controls -->
+        <div class="board-footer">
+
+          <p
+            id="gameMessage"
+            class="game-message"
+            role="status"
+          >
+            Choose a level, then press Start game when you're ready.
+          </p>
+
+          <button
+            id="startButton"
+            class="start-button"
+            type="button"
+          >
+            Start game
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Sidebar -->
+      <aside class="game-sidebar">
+
+        <!-- Instructions -->
+        <div class="side-card">
+
+          <h3>How to play</h3>
+
+          <div class="rule-row">
+            <span class="rule-number">1</span>
+            <span>Flip two cards at a time.</span>
+          </div>
+
+          <div class="rule-row">
+            <span class="rule-number">2</span>
+            <span>Matches stay open. Misses flip back.</span>
+          </div>
+
+          <div class="rule-row">
+            <span class="rule-number">3</span>
+            <span>
+              Match every fruit pair, then solve the Banana puzzle to complete the level.
+            </span>
+          </div>
+
+        </div>
+
+
+        <!-- Banana API Information -->
+        <div class="side-card api-note">
+
+          <div class="api-note-icon">🍌</div>
+
+          <h3>Banana Game API</h3>
+
+          <p>
+            After matching all the fruit pairs, solve one puzzle from the University of Bedfordshire Banana Game API to complete each level.
+          </p>
+
+        </div>
+
       </aside>
+
     </section>
-    <section id="challengePanel" class="challenge-panel hidden">
-      <div class="challenge-copy"><div class="step-label">02 / BANANA CHALLENGE</div><h2>One last <span>brain teaser.</span></h2><p>Study the puzzle image and enter the numerical answer.</p><div class="challenge-image-wrap"><img id="bananaQuestion" alt="Banana Game API puzzle"><div id="challengeLoading" class="challenge-loading hidden">Loading puzzle…</div></div><form id="answerForm" class="answer-form"><label for="answerInput">Your answer</label><div class="answer-controls"><input id="answerInput" type="number" step="1" placeholder="Enter a number" required><button class="button" type="submit">Check answer →</button></div></form><p id="answerMessage" class="game-message" role="status"></p><button id="newChallengeButton" class="text-button">↻ Get another puzzle</button></div>
+
+
+    <!-- Level Completion Panel -->
+    <section
+      id="completePanel"
+      class="complete-panel"
+      hidden
+      aria-live="polite"
+    >
+
+      <div class="complete-mark">✓</div>
+
+      <p class="eyebrow">Level complete</p>
+
+      <h2 id="completeTitle">
+        Nice work!
+      </h2>
+
+      <p id="completeCopy">
+        You completed the fruit memory quest and solved the Banana puzzle.
+      </p>
+
+
+      <!-- Completion Statistics -->
+      <div class="complete-stats">
+
+        <div>
+          <span>Moves</span>
+          <strong id="finalMoves">0</strong>
+        </div>
+
+        <div>
+          <span>Time</span>
+          <strong id="finalTime">00:00</strong>
+        </div>
+
+      </div>
+
+
+      <button
+        id="nextLevelButton"
+        class="start-button"
+        type="button"
+      >
+        Next level
+      </button>
+
     </section>
-    <section id="completePanel" class="complete-panel hidden"><div class="complete-emoji">🏆</div><div class="eyebrow">QUEST COMPLETE</div><h2>Well played, <span id="winnerName">player</span>!</h2><p>You matched every pair and cracked the Banana Challenge.</p><div class="complete-stats"><div><span>MOVES</span><strong id="finalMoves">0</strong></div><div><span>TIME</span><strong id="finalTime">0s</strong></div></div><button id="playAgainButton" class="button">Play again ↻</button></section>
+
   </main>
-  <script src="/js/api.js"></script><script src="/js/game.js"></script>
+
+
+  <!-- JavaScript -->
+  <script src="/js/api.js"></script>
+  <script src="/js/game.js"></script>
+
 </body>
 </html>

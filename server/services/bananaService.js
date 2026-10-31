@@ -2,7 +2,9 @@ const BANANA_API_URL = "https://marcconrad.com/uob/banana/api.php?out=json";
 
 async function getBananaQuestion() {
   const response = await fetch(BANANA_API_URL, {
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json"
+    },
     signal: AbortSignal.timeout(12000)
   });
 
@@ -12,18 +14,19 @@ async function getBananaQuestion() {
 
   const data = await response.json();
 
-  if (!data || typeof data.question !== "string" || data.solution === undefined) {
-    throw new Error("Banana API response did not contain question and solution.");
-  }
-
-  const solution = Number(data.solution);
-  if (!Number.isFinite(solution)) {
-    throw new Error("Banana API returned an invalid solution.");
+  if (
+    !data ||
+    typeof data.question !== "string" ||
+    !data.question.trim() ||
+    data.solution === undefined ||
+    data.solution === null
+  ) {
+    throw new Error("Invalid Banana API puzzle response.");
   }
 
   return {
-    question: data.question,
-    solution
+    question: data.question.trim(),
+    solution: String(data.solution).trim()
   };
 }
 
